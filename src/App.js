@@ -3,39 +3,11 @@
 import './App.css';
 import Dates from './componentsv2/DateUI/Dates'
 import Calender from './componentsv2/Calender/Calender';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react';
+import * as Context from './componentsv2/contextHooks/ContextFile';
 
 function App() {
-  // const[goals,setGoals] = useState([
-  //   {
-  //     id:1,
-  //     goal: "have this done by friday",
-  //     date: "friday"
-  //   },
-  //   {
-  //     id:2,
-  //     goal: "poo eyes",
-  //     date: "never"
-  //   }
-  // ])  
 
-  // const[reminders,setReminders] = useState([
-  //   {
-  //     id:1,
-  //     reminder: "wake up early today",
-  //     date: "friday"
-  //   },
-  //   {
-  //     id:2,
-  //     reminder: "poo eyes",
-  //     date: "tomorrow"
-  //   }
-  // ])  
-
-  // function deleteGoal(id) {
-
-  //   setGoals(goals.filter((goal => goal.id !== parseInt(id))))
-  // }
   const event = new Date();
   const [showCalender, setShowCalender] = useState([true])
   
@@ -46,7 +18,9 @@ function App() {
   const [activeYear, setActiveYear] = useState(event.getFullYear())
   const [differenceBetweenFirstDayAndLastSunday, setDifferenceBetweenFirstDayAndLastSunday] = useState(0)
   //possible error when goals might read from a different year when on the edge of the year
-  var placeHolder
+  var activeDate = {activeDay,displayMonth,activeYear}
+  var currentDate = {event}
+  
   const [goals, setGoals] = useState([
     {
       id:1,
@@ -225,26 +199,38 @@ function App() {
   }
   return (
     
-    <div>
-      {showCalender?
-      <Calender 
-      months={months} 
-      currentMonth = {displayMonth} 
-      method = {toggleCalender} 
-      goals ={goals}
-      days = {differenceBetweenFirstDayAndLastSunday}
-      changeMonth ={toggleMonth}
-      currentYear={activeYear}
-      deleteMethod={deleteGoal}/>: 
-      <Dates 
-      day ={activeDay} 
-      month = {months[activeMonth].month} 
-      year = {activeYear} 
-      method = {exitClicked} 
-      goals = {getSpecificDaysGoal()}
-      deleteGoal ={ deleteGoal} 
-      submitMethod = {AddingDate}/>}
-    
+    <div className ='background'>
+      <Context.Months.Provider value ={months}>
+
+        <Context.ActiveDate.Provider value ={activeDate}>
+
+          <Context.CurrentDate.Provider value ={event}>
+            {showCalender?
+            <Calender 
+            months={months} 
+            currentMonth = {displayMonth} 
+            method = {toggleCalender} 
+            goals ={goals}
+            days = {differenceBetweenFirstDayAndLastSunday}
+            changeMonth ={toggleMonth}
+            currentYear={activeYear}
+            deleteMethod={deleteGoal}/>: 
+            <Dates 
+            day ={activeDay} 
+            month = {months[activeMonth].month} 
+            year = {activeYear} 
+            method = {exitClicked} 
+            goals = {getSpecificDaysGoal()}
+            deleteGoal ={ deleteGoal} 
+            submitMethod = {AddingDate}/>}
+          
+          </Context.CurrentDate.Provider>
+          
+        </Context.ActiveDate.Provider>
+
+      </Context.Months.Provider>
+      
+      
     </div>
       /* <Date Date= 'Hello' goals = {goals} deleteGoal = {deleteGoal} reminders = {reminders}/> */
     

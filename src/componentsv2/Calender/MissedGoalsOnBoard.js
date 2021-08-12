@@ -1,15 +1,14 @@
 import React from 'react'
 import GoalButton from '../Goals/GoalButton'
-const GoalsOnBoard = ({goal,days, deleteMethod,color,text}) => {
+const MissedGoalsOnBoard = ({goal,days, deleteMethod,color,text}) => {
   return (
     <div className='seperate-goals'>
       {days? 
-      <h5> There is {days} days left to do {goal.goal}</h5>:
-      <h5> HURRY UP {goal.goal} IS DUE TODAY</h5>}
+      <h5> {goal.goal} is late by {days} days</h5>:
+      <h5> HURRY UP you still have time to fishish {goal.goal}</h5>}
       <GoalButton color ={color} text ={text} method={deleteMethod} data={goal}/>
-      
     </div>
   )
 }
 
-export default GoalsOnBoard
+export default MissedGoalsOnBoard

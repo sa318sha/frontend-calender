@@ -11,6 +11,7 @@ const AddGoals = ({submitMethod}) => {
   
     if(!text){
       alert('Please Enter A Goal Before Submitting')
+      return
     }
   
     submitMethod(text)

@@ -14,7 +14,7 @@ for(var i = 0; i < 8;i++){
   for(var x=0; x <goals.length; x++){
     if(goals[x].date === `${month}/${day}/${year}`){
 
-      array.push(<GoalsOnBoard deleteMethod ={deleteMethod} key= {goals[x].id} goal = {goals[x]} days={i}/>)
+      array.push(<GoalsOnBoard text ='finish' color='green' deleteMethod ={deleteMethod} key= {goals[x].id} goal = {goals[x]} days={i}/>)
     }
   }
   day++;

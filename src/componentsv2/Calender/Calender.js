@@ -2,14 +2,14 @@ import React from 'react'
 import CalenderHeader from './CalenderHeader'
 import CalenderBody from './CalenderBody'
 import ArrowButtons from '../Buttons/ArrowButtons'
-import UpComingGoals from './UpComingGoals'
 import DaysOfTheWeek from './DaysOfTheWeek'
+import GoalsBlockInCalender from './GoalsBlockInCalender'
 const Calender = ({months, currentMonth, method,goals, days,changeMonth,currentYear, deleteMethod}) => {
 
   
   return (
     <div>
-      <CalenderHeader months = {months} month ={currentMonth} year ={currentYear}/>
+      <CalenderHeader/>
       <div className='calender-container'>
 
         <ArrowButtons color ='black' text ='prev' changeMonth = {changeMonth}/>
@@ -23,7 +23,8 @@ const Calender = ({months, currentMonth, method,goals, days,changeMonth,currentY
         
 
         <ArrowButtons color ='black' text ='next' changeMonth = {changeMonth}/>
-        <UpComingGoals goals ={goals} months={months} deleteMethod={deleteMethod}/>
+        <GoalsBlockInCalender goals ={goals} months={months} deleteMethod={deleteMethod}/>
+        
       </div>
       
     </div>
