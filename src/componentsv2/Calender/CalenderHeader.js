@@ -6,7 +6,7 @@ const CalenderHeader = ({name,signOutFunction}) => {
   const currentDay = useContext(Context.CurrentDate)
 
   const monthsArray = useContext(Context.Months)
-  console.log(monthsArray)
+
   return (
     <div className='calender-header'>
       <div>{`Today is ${monthsArray[currentDay.getMonth()].month} ${currentDay.getDate()}, ${currentDay.getFullYear()}`}</div>

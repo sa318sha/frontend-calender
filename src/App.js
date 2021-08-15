@@ -6,20 +6,21 @@ const App = () => {
   
   const errors = {}
   const[users, setUsers] = useState({})
+  const[goalsFromDatabase,setGoalsFromDatabase] =useState([])
   function reducer(state,action){
     switch(action.type){
       case 'login':  
         for(let i =0; i < users.length; i++){
-          if(users[i].name === action.name){
-            
+          if(users[i].nameValue === action.name){
+
             return {
               name: action.name,
-              goals: users[i].goals,
-              index: i +1
+              goals: goalsFromDatabase.filter((goal)=> goal.user_id === users[i].id ),
+              index: users[i].id
             }
           }
         }
-        errors.notValidName = 'Incorrect Username try hello world'
+        errors.notValidName = 'Incorrect Username try hello world for pregenerated template'
         return{
           name: '',
           goals: [],
@@ -27,7 +28,7 @@ const App = () => {
         };
       case 'sign-up':
         for(let i =0; i < users.length; i++){
-          if(users[i].name === action.name){
+          if(users[i].nameValue === action.name){
             errors.NameTaken ='Name is Taken'
             return{
               name: '',
@@ -74,21 +75,28 @@ const App = () => {
   
   useEffect(() => {
     const getUsers = async() =>{
-      const getUsers = await fetchTask()
+      const getUsersFromDatabase = await fetchTask(`http://localhost:9000/users`)
 
-      setUsers(getUsers)
+      setUsers(getUsersFromDatabase)
+
       
     }
     getUsers()
-  }, [])
-
-  
+  }, [index])
   useEffect(() => {
+    const getGoals = async() =>{
+      const getGoalsFromDatabase = await fetchTask(`http://localhost:9000/CalenderAPI`)
 
-  }, [name,goals])
+      setGoalsFromDatabase(getGoalsFromDatabase)
+
+      
+    }
+    getGoals()
+  }, [index])
+
   
-const fetchTask = async () =>{
-  const res = await fetch(`http://localhost:9000/CalenderAPI`,{
+const fetchTask = async (customURL) =>{
+  const res = await fetch(customURL,{
       headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -96,6 +104,7 @@ const fetchTask = async () =>{
   })
   const data = await res.json();
   return data
+
 }
 
   

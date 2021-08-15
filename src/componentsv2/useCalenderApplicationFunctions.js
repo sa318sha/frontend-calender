@@ -1,5 +1,5 @@
 import { useState } from "react";
-export default function useCalenderApplicationFunctions (event,userGoals) {
+export default function useCalenderApplicationFunctions (event,userGoals,index) {
 
   
   const [showCalender, setShowCalender] = useState([true])
@@ -14,8 +14,6 @@ export default function useCalenderApplicationFunctions (event,userGoals) {
   //possible error when goals might read from a different year when on the edge of the year
 
   const [goals, setGoals] = useState(userGoals)
-
-  console.log('goals in calender application functions', goals)
   const months = [{
     month: 'January',
     days: 31
@@ -68,16 +66,6 @@ export default function useCalenderApplicationFunctions (event,userGoals) {
     days: 31,
   }]
 
-  const fetchTask = async () =>{
-    const res = await fetch(`http://localhost:9000/calenderAPI`,{
-        headers : { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-         }
-    })
-    const data = await res.json();
-    return data
-  }
     
   function toggleCalender(object) {
     
@@ -109,10 +97,13 @@ export default function useCalenderApplicationFunctions (event,userGoals) {
   }
 
   async function deleteGoal(id) {
-      const res = await fetch(`http://localhost:9000/calenderAPI/${id}`,{
-        method: 'DELETE'
-      })
-      //console.log('the response is', res.msg)
+
+      const res = await fetch(`http://localhost:9000/calenderAPI/${id}/${index}`,{
+        method: 'DELETE',
+        
+      }
+      
+      )
       setGoals(goals.filter((goal => goal.id !== parseInt(id))))
     }
 
@@ -121,23 +112,21 @@ export default function useCalenderApplicationFunctions (event,userGoals) {
 
   const date = submittedObject.DateOFObject;
   const goal = submittedObject.text;
-  const id = Math.floor(Math.random()*10000 +1);
-  
+
+
     const res = await fetch(`http://localhost:9000/CalenderAPI`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json'
       },
-      body: JSON.stringify({id, goal, date})
+      body: JSON.stringify({index, goal, date})
     })
 
     const data = await res.json()
-    console.log(data)
-    
-    
-    //const newGoal = { id, goal,date}
+
    
-    setGoals([...goals,data])
+    setGoals([...goals,data[0]])
+
 
 
   }
