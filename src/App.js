@@ -1,243 +1,122 @@
 
-
-import './App.css';
-import Dates from './componentsv2/DateUI/Dates'
-import Calender from './componentsv2/Calender/Calender';
-import { useState, useEffect, useMemo } from 'react';
-import * as Context from './componentsv2/contextHooks/ContextFile';
-
-function App() {
-
-  const event = new Date();
-  const [showCalender, setShowCalender] = useState([true])
+import CalenderApplication from './componentsv2/CalenderApplication'
+import { useEffect, useState, useReducer } from 'react'
+import MainLogInMenu from './componentsv2/signUpLoginIn/MainLogInMenu'
+const App = () => {
   
-  const [activeDay, setActiveDay] = useState(event.getDate())
-
-  const [activeMonth, setActiveMonth] = useState(event.getMonth())//this is the month that will change if a date is clicked that is not within the month
-  const [displayMonth, setDisplayMonth] = useState(event.getMonth())//this is the month that will be displayed
-  const [activeYear, setActiveYear] = useState(event.getFullYear())
-  const [differenceBetweenFirstDayAndLastSunday, setDifferenceBetweenFirstDayAndLastSunday] = useState(0)
-  //possible error when goals might read from a different year when on the edge of the year
-  var activeDate = {activeDay,displayMonth,activeYear}
-  var currentDate = {event}
-  
-  const [goals, setGoals] = useState([
-    {
-      id:1,
-      goal: "have this done by friday",
-      date: '8/8/2021'
-    },
-    {
-      id:2,
-      goal: "poo eyes",
-      date: '8/9/2021'
-    },
-    {
-      id:4,
-      goal: "hello",
-      date: '8/8/2021'
-    },
-    {
-      id:3,
-      goal: "test 4",
-      date: '9/2/2021'
-    },
-    {
-      id:5,
-      goal: "test 8",
-      date: '8/12/2021'
+  const errors = {}
+  const[users, setUsers] = useState({})
+  function reducer(state,action){
+    switch(action.type){
+      case 'login':  
+        for(let i =0; i < users.length; i++){
+          if(users[i].name === action.name){
+            
+            return {
+              name: action.name,
+              goals: users[i].goals,
+              index: i +1
+            }
+          }
+        }
+        errors.notValidName = 'Incorrect Username try hello world'
+        return{
+          name: '',
+          goals: [],
+          index: null
+        };
+      case 'sign-up':
+        for(let i =0; i < users.length; i++){
+          if(users[i].name === action.name){
+            errors.NameTaken ='Name is Taken'
+            return{
+              name: '',
+              goals: [],
+              index: null
+            };
+          }
+        }
+        return {
+          name: action.name,
+          goals: [],
+          index: users.length
+        }
+      case 'sign-out':
+        return{
+          name: '',
+          goals: [],
+          index: null
+        };
+      default:
+        return state
     }
-    ]);
-  
-  const months = [{
-    month: 'January',
-    days: 31
+  }
 
-  },
-  {
-    month: 'February',
-    days: 28,
-    leapYear: 29
-  },
-  {
-    month: 'March',
-    days: 31,
+  const[{name, goals,index}, dispatch] = useReducer(reducer, {name:'', goals: [], index: null})
 
-  },
-  {
-    month: 'April',
-    days: 30,
-  },
-  {
-    month: 'May',
-    days: 31,
-  },
-  {
-    month: 'June',
-    days: 30,
-  },
-  {
-    month: 'July',
-    days: 31,
-  },
-  {
-    month: 'August',
-    days: 31,
-  },
-  {
-    month: 'September',
-    days: 30,
-  },
-  {
-    month: 'October',
-    days: 31,
-  },
-  {
-    month: 'November',
-    days: 30,
-  },
-  {
-    month: 'December',
-    days: 31,
-  }]
-  document.val = 'hello'
-  useEffect( ()=> {
-    console.log('mounted')
-
-    return ()=>{
-      console.log('unmounted')
-    }
-  },[activeMonth]);
-  function toggleCalender(object) {
+  const loginFunction = (e,name) =>{
+    e.preventDefault()
+    dispatch({type: 'login', name})
     
+  }
+  const signUpFunction = (e,name) =>{
     
-    console.log(object.year)
-    setActiveDay(object.day)
-    setActiveMonth(object.month)
-    setActiveYear(object.year)
-    setShowCalender(!showCalender)
+    e.preventDefault()
+
+    dispatch({type: 'sign-up', name})
+    
+  }
+  const signOutFunction = () =>{
+
+    dispatch({type: 'sign-out'})
   }
 
-  function exitClicked() {
-    setShowCalender(!showCalender)
-  }
-
-  function getSpecificDaysGoal() {
-
-    var filteredGoals = []
-
-    for(let i =0; i < goals.length; i++){
-      if(goals[i].date === `${activeMonth+1}/${activeDay}/${activeYear}`){
-        
-        filteredGoals.push(goals[i])
-      }
-    }
-
-    return filteredGoals
- 
-  }
-
-  function deleteGoal(id) {
-
-      setGoals(goals.filter((goal => goal.id !== parseInt(id))))
-    }
-  function submitForm(submittedObject) {
-    const id = Math.floor(Math.random()*10000 +1);
-    const date = submittedObject.DateOFObject;
-    const goal = submittedObject.text;
-    const newGoal = { id, goal,date}
-   
-    setGoals([...goals,newGoal])
-
-
-  }
-  const AddingDate = (text) =>{
-
-    const DateOFObject = `${activeMonth+1}/${activeDay}/${activeYear}`;
-
-    submitForm({DateOFObject,text})
   
-  }
-  const toggleMonth = (value) => {
+  useEffect(() => {
+    const getUsers = async() =>{
+      const getUsers = await fetchTask()
 
-    if(value === 'next'){
+      setUsers(getUsers)
       
-      setDifferenceBetweenFirstDayAndLastSunday((months[displayMonth ].days + differenceBetweenFirstDayAndLastSunday)%7)
-      if(displayMonth+1 ===12){
-        setDisplayMonth(0)
-        setActiveYear(activeYear+1)
-      }else{
-        setDisplayMonth(displayMonth+1)
-      }
     }
-    
-    if(value === 'prev'){
-      if(displayMonth-1 === -1){
-        setDisplayMonth(11)
-        setDisplayMonth(activeYear-1)
-      }else{
-        setDisplayMonth(displayMonth-1)
-      }
-      let replacementVal =0
-      if(displayMonth -1 === -1){
-        replacementVal= 11
-      }else{
-        replacementVal = displayMonth-1
-      }
-      console.log(replacementVal)
-      let x =0
-      console.log('this should be the new month',displayMonth)
-      console.log('this should be the next month', displayMonth-1)
-      while((x + months[replacementVal].days) % 7 !== differenceBetweenFirstDayAndLastSunday){
- 
-        x++;
-      }
+    getUsers()
+  }, [])
 
-      setDifferenceBetweenFirstDayAndLastSunday(x)
-    }
+  
+  useEffect(() => {
 
-  }
-  return (
-    
-    <div className ='background'>
-      <Context.Months.Provider value ={months}>
-
-        <Context.ActiveDate.Provider value ={activeDate}>
-
-          <Context.CurrentDate.Provider value ={event}>
-            {showCalender?
-            <Calender 
-            months={months} 
-            currentMonth = {displayMonth} 
-            method = {toggleCalender} 
-            goals ={goals}
-            days = {differenceBetweenFirstDayAndLastSunday}
-            changeMonth ={toggleMonth}
-            currentYear={activeYear}
-            deleteMethod={deleteGoal}/>: 
-            <Dates 
-            day ={activeDay} 
-            month = {months[activeMonth].month} 
-            year = {activeYear} 
-            method = {exitClicked} 
-            goals = {getSpecificDaysGoal()}
-            deleteGoal ={ deleteGoal} 
-            submitMethod = {AddingDate}/>}
-          
-          </Context.CurrentDate.Provider>
-          
-        </Context.ActiveDate.Provider>
-
-      </Context.Months.Provider>
-      
-      
-    </div>
-      /* <Date Date= 'Hello' goals = {goals} deleteGoal = {deleteGoal} reminders = {reminders}/> */
-    
-    // <div className ='container'>
-    //   {/* <LoginMenu/> */}
-    // </div>
-  );
+  }, [name,goals])
+  
+const fetchTask = async () =>{
+  const res = await fetch(`http://localhost:9000/CalenderAPI`,{
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+  })
+  const data = await res.json();
+  return data
 }
 
-export default App;
+  
+  return (
+    
+    <div>
+      {name?
+      <CalenderApplication
+      index ={index}
+      name ={name} 
+      signOutFunction={signOutFunction}
+      userGoals={goals}
+      />:
+      <MainLogInMenu
+      errors ={errors}
+      loginFunction ={loginFunction}
+      signUpFunction = {signUpFunction}/>}
+      
+      {/*  */}
+    </div>
+  )
+}
+
+export default App

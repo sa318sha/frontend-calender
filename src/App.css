@@ -5,8 +5,10 @@
   border: 0;
 }
 
-.background{
-  background-color:rgb(233, 252, 255);
+html{
+  /* background-color:rgb(233, 252, 255); */
+  /* background-image: url(https://assets-eu-01.kc-usercontent.com/bcd02f72-b50c-0179-8b4b-5e44f5340bd4/7a0b8947-d971-444f-9287-e11fd0d2c421/autumn-poems-header-min.jpg);
+  opacity: 0.1; */
   width: 100vw;
   height: 100vh;
   
@@ -50,6 +52,17 @@
   border-radius: 5px;
   text-align: center;
   margin-top: 20px;
+
+}
+
+.login-container{
+  
+  margin: 50px auto;
+  max-width: 500px;
+  min-height: 300px;
+  border: 1px solid blue;
+  border-radius: 5px;
+  padding: 30px;
 
 }
 
@@ -151,7 +164,7 @@
 
 
 .date-container{
-  transition: height 2s linear 1s;
+  
   margin: 50px auto;
   max-width: 500px;
   min-height: 300px;

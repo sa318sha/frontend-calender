@@ -4,12 +4,12 @@ import CalenderBody from './CalenderBody'
 import ArrowButtons from '../Buttons/ArrowButtons'
 import DaysOfTheWeek from './DaysOfTheWeek'
 import GoalsBlockInCalender from './GoalsBlockInCalender'
-const Calender = ({months, currentMonth, method,goals, days,changeMonth,currentYear, deleteMethod}) => {
+const Calender = ({name,signOutFunction, months, currentMonth, method,goals, days,changeMonth,currentYear, deleteMethod}) => {
 
   
   return (
     <div>
-      <CalenderHeader/>
+      <CalenderHeader name ={name} signOutFunction ={signOutFunction}/>
       <div className='calender-container'>
 
         <ArrowButtons color ='black' text ='prev' changeMonth = {changeMonth}/>

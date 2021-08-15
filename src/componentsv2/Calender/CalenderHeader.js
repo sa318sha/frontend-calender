@@ -1,7 +1,7 @@
 import React from 'react'
 import { useContext } from 'react';
 import * as Context from '../contextHooks/ContextFile';
-const CalenderHeader = () => {
+const CalenderHeader = ({name,signOutFunction}) => {
   const {activeDay,displayMonth,activeYear} = useContext(Context.ActiveDate)
   const currentDay = useContext(Context.CurrentDate)
 
@@ -11,7 +11,8 @@ const CalenderHeader = () => {
     <div className='calender-header'>
       <div>{`Today is ${monthsArray[currentDay.getMonth()].month} ${currentDay.getDate()}, ${currentDay.getFullYear()}`}</div>
       <h3>{`${monthsArray[displayMonth].month} ${activeYear}`}</h3>
-      <div> Sign Out </div>
+      <div> 
+        <div> {name}</div> <button className ='btn btn-block' onClick ={signOutFunction}> SignOut </button> </div>
     </div>
   )
 }
